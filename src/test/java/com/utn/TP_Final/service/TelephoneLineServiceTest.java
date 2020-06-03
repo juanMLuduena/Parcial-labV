@@ -1,12 +1,16 @@
 package com.utn.TP_Final.service;
 
+import com.utn.TP_Final.exceptions.NoDataException;
 import com.utn.TP_Final.exceptions.WrongPrefixException;
 import com.utn.TP_Final.model.TelephoneLine;
+import com.utn.TP_Final.projections.MostAndLeastUsedLine;
 import com.utn.TP_Final.repository.TelephoneLineRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,27 @@ public class TelephoneLineServiceTest {
 
         assertEquals(3,telephonesByPrefix.size());
         verify(telephoneLineRepository, times(1)).findByLineNumberStartsWith("221");
+
+    }
+
+    @Test
+    public void findMostAndLeastUsedTelephoneLine() throws NoDataException {
+
+        List<TelephoneLine> telephones = new ArrayList<TelephoneLine>();
+
+        telephones.add(new TelephoneLine(1,"1111108654",null,null,null,null));
+        telephones.add(new TelephoneLine(2,"2222208654",null,null,null,null));
+
+        ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+        MostAndLeastUsedLine mostAndLeastUsedLine = factory.createProjection(MostAndLeastUsedLine.class);
+        mostAndLeastUsedLine.setMostUsedTelephoneLine("1111108654");
+        mostAndLeastUsedLine.setLeastUsedTelephoneLine("2222208654");
+
+        when(telephoneLineRepository.findMostAndLeastUsedTelephoneLine()).thenReturn(mostAndLeastUsedLine);
+
+
+        assertEquals(mostAndLeastUsedLine, telephoneLineRepository.findMostAndLeastUsedTelephoneLine());
+        verify(telephoneLineRepository, times(1)).findMostAndLeastUsedTelephoneLine();
 
     }
 

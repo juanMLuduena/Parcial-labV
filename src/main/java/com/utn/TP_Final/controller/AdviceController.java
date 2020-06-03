@@ -1,6 +1,7 @@
 package com.utn.TP_Final.controller;
 
 import com.utn.TP_Final.dto.ErrorResponseDto;
+import com.utn.TP_Final.exceptions.NoDataException;
 import com.utn.TP_Final.exceptions.ValidationException;
 import com.utn.TP_Final.exceptions.WrongPrefixException;
 import org.springframework.dao.DataAccessException;
@@ -29,6 +30,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WrongPrefixException.class)
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ErrorResponseDto wrongPrefixExceptionHandler(WrongPrefixException e){
+        return new ErrorResponseDto(e.getMessage());
+    }
+
+    @ExceptionHandler(NoDataException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDto noDataExceptionHandler(NoDataException e){
         return new ErrorResponseDto(e.getMessage());
     }
 

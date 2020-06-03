@@ -1,7 +1,9 @@
 package com.utn.TP_Final.service;
 
+import com.utn.TP_Final.exceptions.NoDataException;
 import com.utn.TP_Final.exceptions.WrongPrefixException;
 import com.utn.TP_Final.model.TelephoneLine;
+import com.utn.TP_Final.projections.MostAndLeastUsedLine;
 import com.utn.TP_Final.repository.TelephoneLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -55,4 +57,8 @@ public class TelephoneLineService {
 
         if(list == null) throw new WrongPrefixException("prefijo incorrecto");
         return list; }
+
+    public MostAndLeastUsedLine findMostAndLeastUsedTelephoneLine() throws NoDataException {
+       return telephoneLineRepository.findMostAndLeastUsedTelephoneLine();
+    }
 }

@@ -1,7 +1,9 @@
 package com.utn.TP_Final.repository;
 
+import com.utn.TP_Final.exceptions.NoDataException;
 import com.utn.TP_Final.exceptions.WrongPrefixException;
 import com.utn.TP_Final.model.TelephoneLine;
+import com.utn.TP_Final.projections.MostAndLeastUsedLine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +35,16 @@ public interface TelephoneLineRepository extends JpaRepository<TelephoneLine, In
     //si comentas la query es exactamente lo mismo
     @Query(value = "select * from telephone_lines where line_number like ?1%",nativeQuery = true)
     List<TelephoneLine> findByLineNumberStartsWith(String prefix) throws WrongPrefixException;
+
+    @Query(value = "select " +
+            " (select t.line_number " +
+            " from telephone_lines t " +
+            " inner join calls c on t.line_number = c.source_number" +
+            " group by t.id order by count(t.id) desc limit 1) as mostUsedTelephoneLine," +
+            " (select t.line_number " +
+            " from telephone_lines t " +
+            " inner join calls c on t.line_number = c.source_number " +
+            " group by t.id order by count(t.id) asc limit 1) as leastUsedTelephoneLine\n",nativeQuery = true)
+    MostAndLeastUsedLine findMostAndLeastUsedTelephoneLine() throws NoDataException;
+
 }

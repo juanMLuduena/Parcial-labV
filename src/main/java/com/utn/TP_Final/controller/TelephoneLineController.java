@@ -1,8 +1,10 @@
 package com.utn.TP_Final.controller;
 
 
+import com.utn.TP_Final.exceptions.NoDataException;
 import com.utn.TP_Final.exceptions.WrongPrefixException;
 import com.utn.TP_Final.model.TelephoneLine;
+import com.utn.TP_Final.projections.MostAndLeastUsedLine;
 import com.utn.TP_Final.service.TelephoneLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -54,6 +56,11 @@ public class TelephoneLineController {
     @GetMapping("/prefix/{prefix}")
     public List<TelephoneLine> findALlByPrefix(@PathVariable() String prefix) throws WrongPrefixException {
     return telephoneLineService.findAllByPrefix(prefix);
+    }
+
+    @GetMapping("/MostAndLeastUsed")
+    public MostAndLeastUsedLine findMostAndLeastUsedTelephoneLine() throws NoDataException {
+        return telephoneLineService.findMostAndLeastUsedTelephoneLine();
     }
 
 }
