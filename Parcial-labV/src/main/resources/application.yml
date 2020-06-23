@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/tpfinal
+    url: jdbc:mysql://localhost:3306/parcialLabv
     username: root
     password:
   jpa:
@@ -11,3 +11,5 @@ spring:
      # naming:
       #  physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+server:
+  port: 8081

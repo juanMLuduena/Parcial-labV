@@ -1,0 +1,84 @@
+SET GLOBAL time_zone = '-3:00';
+drop database tpfinal;
+create database tpfinal;
+use tpfinal;
+
+
+create table countries(
+id_country int auto_increment primary key,
+country_name varchar(50) unique
+);
+
+create table provinces(
+id_province int auto_increment primary key,
+province_name varchar(50),
+id_country int,
+constraint fk_country foreign key (id_country) references countries(id_country)
+);
+
+create table cities(
+id_city int auto_increment primary key,
+city_name varchar(50),
+prefix_number int,
+id_province int,
+constraint fk_province foreign key (id_province) references provinces(id_province)
+);
+
+create table persons(
+id_person int auto_increment primary key,
+firstname varchar(50),
+lastname varchar(50),
+dni int unique,
+id_city int,
+user_type enum('ADMIN', 'EMPLOYEE', 'CUSTOMER'),
+constraint fk_city_person foreign key (id_city) references cities(id_city)
+);
+
+create table fees(
+id_fee int auto_increment primary key,
+source_city_id int,
+destination_city_id int,
+price_per_minute float,
+cost_per_minute float,
+constraint fk_source_city_fee foreign key (source_city_id) references cities(id_city),
+constraint fk_destination_city_fee foreign key (destination_city_id) references cities(id_city)
+);
+
+create table telephone_lines(
+id_telephone_line int auto_increment primary key,
+line_number varchar(50) unique,
+line_type enum('MOBILE', 'RESIDENTIAL'),
+id_person int,
+status enum('SUSPENDED', 'ACTIVE', 'DELETED'),
+constraint fk_person_telephone_line foreign key (id_person) references persons(id_person)
+);
+
+create table invoices(
+id_invoice int auto_increment primary key,
+calls int,
+cost float,
+total_price float,
+date_creation date,
+date_expiration date,
+id_telephone_line int,
+id_person int,
+paid boolean,
+constraint fk_telephone_line foreign key (id_telephone_line) references telephone_lines(id_telephone_line),
+constraint fk_person_invoice foreign key (id_person) references persons(id_person)
+);
+
+create table calls(
+id_call int auto_increment primary key,
+source_number varchar(50),
+destination_number varchar(50),
+price_per_minute float,
+duration_secs int,
+total_cost float,
+total_price float,
+id_invoice int,
+source_city_id int,
+destination_city_id int,
+constraint fk_invoice foreign key (id_invoice) references invoices(id_invoice),
+constraint fk_source_city_call foreign key (source_city_id) references cities(id_city),
+constraint fk_destination_city_call foreign key (destination_city_id) references cities(id_city)
+);
