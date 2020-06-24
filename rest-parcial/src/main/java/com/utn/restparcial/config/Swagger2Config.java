@@ -1,4 +1,4 @@
-package com.utn.TP_Final.config;
+package com.utn.restparcial.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

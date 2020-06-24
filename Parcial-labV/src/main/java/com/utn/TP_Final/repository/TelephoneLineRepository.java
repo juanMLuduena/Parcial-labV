@@ -36,15 +36,15 @@ public interface TelephoneLineRepository extends JpaRepository<TelephoneLine, In
     @Query(value = "select * from telephone_lines where line_number like ?1%",nativeQuery = true)
     List<TelephoneLine> findByLineNumberStartsWith(String prefix) throws WrongPrefixException;
 
-    @Query(value = "select " +
-            " (select t.line_number " +
+    @Query(value = " (select t.line_number as mostUsedTelephoneLine " +
             " from telephone_lines t " +
-            " inner join calls c on t.line_number = c.source_number" +
-            " group by t.id order by count(t.id) desc limit 1) as mostUsedTelephoneLine," +
-            " (select t.line_number " +
-            " from telephone_lines t " +
-            " inner join calls c on t.line_number = c.source_number " +
-            " group by t.id order by count(t.id) asc limit 1) as leastUsedTelephoneLine\n",nativeQuery = true)
+            " inner join calls c on t.line_number = c.source_number"+
+            " group by t.id order by count(t.id) desc limit 1)"+
+            " UNION"+
+            " (select t.line_number as leastUsedTelephoneLine"+
+            " from telephone_lines t"+
+            " inner join calls c on t.line_number = c.source_number"+
+            " group by t.id order by count(t.id) asc limit 1)",nativeQuery = true)
     MostAndLeastUsedLine findMostAndLeastUsedTelephoneLine() throws NoDataException;
 
 }

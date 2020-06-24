@@ -19,5 +19,5 @@ public class IntegrationComponent {
         rest = new RestTemplateBuilder().build();
     }
 
-    public Country getCountriesFromApi(){ return rest.getForObject(url,Country.class)}
+    public Country getCountriesFromApi(){ return rest.getForObject(url,Country.class);}
 }
